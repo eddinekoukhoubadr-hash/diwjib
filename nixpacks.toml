@@ -15,15 +15,11 @@ cmds = [
 cmds = [
     "pnpm run build",
     "php artisan config:cache",
-    "php artisan route:cache"
+    "php artisan storage:link"
 ]
 
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
 
-[environment]
-NODE_ENV = "production"
-
-# FORCER PHP 8.2 ou 8.3
 [build.args]
 PHP_VERSION = "8.2"
