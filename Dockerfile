@@ -41,5 +41,5 @@ RUN pnpm run build
 # Exposer le port
 EXPOSE $PORT
 
-# Commande de démarrage
-CMD php artisan serve --host=0.0.0.0 --port=$PORT
+# Commande de démarrage CORRIGÉE
+CMD php -S 0.0.0.0:${PORT:-8000} -t public
