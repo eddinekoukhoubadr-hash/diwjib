@@ -5,8 +5,8 @@ RUN apt-get update && apt-get install -y \
     git curl nodejs npm \
     libssl-dev pkg-config
 
-# Installer MongoDB
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+# ✅ INSTALLER MONGODB 1.15.3 (compatible)
+RUN pecl install mongodb-1.15.3 && docker-php-ext-enable mongodb
 
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -17,7 +17,7 @@ RUN npm install -g pnpm
 WORKDIR /app
 COPY . .
 
-# CRÉER le fichier .env directement
+# CRÉER le fichier .env
 RUN echo "APP_NAME=DIWJIB" > .env && \
     echo "APP_ENV=production" >> .env && \
     echo "APP_KEY=base64:fkhiKAjskaqWPNQ6E7DyJHptxAWAneMvZ/kzHrFExq4=" >> .env && \
@@ -30,12 +30,8 @@ RUN echo "APP_NAME=DIWJIB" > .env && \
     echo "RECAPTCHA_SECRET_KEY=6LeptIkrAAAAAAlsJpdZbQ5v7Tldog2rs6bOyTq1" >> .env && \
     echo "ADMIN_ACCESS_CODE=12345" >> .env
 
-# Installer les dépendances PHP
+# Installer les dépendances
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+RUN pnpm install && pnpm run build
 
-# Installer les dépendances Node et builder
-RUN pnpm install
-RUN pnpm run build
-
-# Commande de démarrage
 CMD php -S 0.0.0.0:8000 -t public
