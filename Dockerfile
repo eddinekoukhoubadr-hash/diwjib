@@ -31,6 +31,9 @@ WORKDIR /app
 # Copier les fichiers du projet
 COPY . .
 
+# Rendre le script exécutable
+RUN chmod +x start.sh
+
 # Installer les dépendances PHP (IGNORER la vérification de version)
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-mongodb
 
@@ -41,5 +44,5 @@ RUN pnpm run build
 # Exposer le port
 EXPOSE $PORT
 
-# Commande de démarrage CORRIGÉE
-CMD php -S 0.0.0.0:${PORT:-8000} -t public
+# Commande de démarrage avec le script
+CMD ["./start.sh"]
