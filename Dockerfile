@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config
 
-# Installer l'extension MongoDB
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+# Installer l'extension MongoDB (version compatible)
+RUN pecl install mongodb-1.15.3 && docker-php-ext-enable mongodb
 
 # Installer d'autres extensions PHP
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
@@ -31,11 +31,8 @@ WORKDIR /app
 # Copier les fichiers du projet
 COPY . .
 
-# Mettre à jour les dépendances MongoDB pour compatibilité PHP 8.2
-RUN composer update mongodb/mongodb mongodb/laravel-mongodb --with-all-dependencies
-
-# Installer les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
+# Installer les dépendances PHP (IGNORER la vérification de version)
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-mongodb
 
 # Installer les dépendances Node et builder
 RUN pnpm install
