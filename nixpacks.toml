@@ -1,0 +1,25 @@
+[phases.setup]
+cmds = [
+    "apt-get update && apt-get install -y git",
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+    "corepack enable && corepack prepare pnpm@latest --activate"
+]
+
+[phases.install]
+cmds = [
+    "composer install --no-dev --optimize-autoloader",
+    "pnpm install"
+]
+
+[phases.build]
+cmds = [
+    "pnpm run build",
+    "php artisan config:cache",
+    "php artisan route:cache"
+]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
+
+[environment]
+NODE_ENV = "production"
